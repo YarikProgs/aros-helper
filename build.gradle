@@ -11,4 +11,5 @@ repositories {
 
 dependencies {
     implementation 'com.google.code.gson:gson:2.12.1'
+    implementation 'com.google.apis:google-api-services-customsearch:v1-rev57-1.23.0'
 }

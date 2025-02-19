@@ -1,9 +1,7 @@
 package net.aros.brain;
 
 import net.aros.ArosUtker;
-import net.aros.dialog.ReloadDialog;
-import net.aros.dialog.SoundDialog;
-import net.aros.dialog.SpeedDialog;
+import net.aros.dialog.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,11 +14,18 @@ public class CommandExecutorRegister {
         executors.put("reload", () -> ArosUtker.brain.setDialog(new ReloadDialog()));
         executors.put("sound", () -> ArosUtker.brain.setDialog(new SoundDialog()));
         executors.put("speed", () -> ArosUtker.brain.setDialog(new SpeedDialog()));
+        executors.put("search", () -> ArosUtker.brain.setDialog(new InternetModuleDialog()));
+        executors.put("internetmodule", () -> ArosUtker.brain.setDialog(new EnableInternetModuleDialog()));
+        executors.put("do_search", () -> ArosUtker.brain.setDialog(new SearchDialog()));
+        executors.put("choose_from_search", () -> ArosUtker.brain.setDialog(new ChooseFromSearchDialog()));
 
         executors.put("do_reload", this::doReload);
 
         executors.put("sound_on", () -> ArosUtker.terminal.sound = true);
         executors.put("sound_off", () -> ArosUtker.terminal.sound = false);
+
+        executors.put("im_on", () -> ArosUtker.internetModule.setEnabled(true));
+        executors.put("im_off", () -> ArosUtker.internetModule.setEnabled(false));
 
         for (int i = 1; i <= 4 ; i++) {
             final int finalI = i;

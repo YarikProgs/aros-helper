@@ -130,9 +130,14 @@ public class Terminal extends JFrame {
         return (error ? DUCK_ERROR : DUCK_COMMON)[duckMouthOpen ? 1 : 0];
     }
 
-    public void say(String text) {
+    public void say(String text, boolean fromCommand) {
         if (text == null) return;
+        if (fromCommand) toBePrinted.append("\n\n");
         toBePrinted.append(OUT_PREFIX).append(" ").append(text).append("\n\n");
+    }
+
+    public void say(String text) {
+        say(text, false);
     }
 
     public void printPrompt() {
