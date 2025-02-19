@@ -1,7 +1,7 @@
 package net.aros.brain.internet;
 
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.customsearch.Customsearch;
 import com.google.api.services.customsearch.CustomsearchRequestInitializer;
 import com.google.api.services.customsearch.model.Result;
@@ -18,7 +18,7 @@ public class InternetModule {
     private boolean enabled, init;
 
     public void init() throws Throwable {
-        customsearch = new Customsearch.Builder(GoogleNetHttpTransport.newTrustedTransport(), JacksonFactory.getDefaultInstance(), null)
+        customsearch = new Customsearch.Builder(GoogleNetHttpTransport.newTrustedTransport(), new GsonFactory(), null)
                 .setApplicationName("U.T.K.E.R-SEARCH")
                 .setGoogleClientRequestInitializer(new CustomsearchRequestInitializer(EnvUtils.getToken(".env")))
                 .build();

@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 group = 'net.aros'
@@ -12,4 +13,12 @@ repositories {
 dependencies {
     implementation 'com.google.code.gson:gson:2.12.1'
     implementation 'com.google.apis:google-api-services-customsearch:v1-rev57-1.23.0'
+    implementation 'com.google.api-client:google-api-client:1.32.1' // Добавьте эту строку
+}
+
+shadowJar {
+    manifest {
+        attributes 'Main-Class': 'net.aros.ArosUtker'
+    }
+    archiveFileName = "${project.name}-${project.version}.jar"
 }

@@ -28,7 +28,10 @@ public class CommandLoader {
     public void load() throws IOException, URISyntaxException {
         commands.clear();
 
-        try (Stream<Path> paths = Files.walk(Paths.get(Objects.requireNonNull(ArosUtker.class.getResource("/commands")).toURI()))) {
+        Path commandsPath = Path.of("commands");
+        if (!Files.exists(commandsPath)) commandsPath.toFile().mkdirs();
+
+        try (Stream<Path> paths = Files.walk(commandsPath)) {
             paths.filter(Files::isRegularFile).filter(p -> p.toString().endsWith(".json")).forEach(this::load);
         }
 
