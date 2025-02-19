@@ -24,7 +24,10 @@ public class CommandExecutorRegister {
     }
 
     private void printStatus() {
-
+        ArosUtker.terminal.say("Отчёт: Статус системы У.Т.К.Э.Р");
+        ArosUtker.terminal.say("Команды: " + ArosUtker.register.executors.size() + ".");
+        ArosUtker.terminal.say("Интернет-модуль: " + (ArosUtker.internetModule.isInit() ? ArosUtker.internetModule.isEnabled() ? "Активен" : "Выключен" : "Не инициализирован") + ".");
+        ArosUtker.terminal.say("С.О.З.И.К: " + (ArosUtker.brain.isAlright() ? "В норме" : "Ошибка") + ".");
     }
 
     private void doReload() {

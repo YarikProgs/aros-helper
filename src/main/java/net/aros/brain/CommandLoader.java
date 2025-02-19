@@ -23,11 +23,12 @@ public class CommandLoader {
         return INSTANCE.commands;
     }
 
-    public void load() throws IOException, URISyntaxException {
+    public void load() throws IOException {
         commands.clear();
 
         Path commandsPath = Path.of("commands");
-        if (!Files.exists(commandsPath)) commandsPath.toFile().mkdirs();
+        if (!Files.exists(commandsPath)) //noinspection ResultOfMethodCallIgnored
+            commandsPath.toFile().mkdirs();
 
         try (Stream<Path> paths = Files.walk(commandsPath)) {
             paths.filter(Files::isRegularFile).filter(p -> p.toString().endsWith(".json")).forEach(this::load);
