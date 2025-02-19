@@ -1,7 +1,11 @@
 package net.aros.brain;
 
 import net.aros.ArosUtker;
-import net.aros.dialog.*;
+import net.aros.dialog.YesNoDialog;
+import net.aros.dialog.custom.EnableInternetModuleDialog;
+import net.aros.dialog.custom.SearchDialog;
+import net.aros.dialog.custom.SoundDialog;
+import net.aros.dialog.custom.SpeedDialog;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,29 +15,20 @@ public class CommandExecutorRegister {
     private final Map<String, Runnable> executors = new HashMap<>();
 
     public void init() {
-        executors.put("reload", () -> ArosUtker.brain.setDialog(new ReloadDialog()));
+        executors.put("reload", () -> ArosUtker.brain.setDialog(new YesNoDialog(this::doReload)));
         executors.put("sound", () -> ArosUtker.brain.setDialog(new SoundDialog()));
         executors.put("speed", () -> ArosUtker.brain.setDialog(new SpeedDialog()));
-        executors.put("search", () -> ArosUtker.brain.setDialog(new InternetModuleDialog()));
-        executors.put("internetmodule", () -> ArosUtker.brain.setDialog(new EnableInternetModuleDialog()));
-        executors.put("do_search", () -> ArosUtker.brain.setDialog(new SearchDialog()));
-        executors.put("choose_from_search", () -> ArosUtker.brain.setDialog(new ChooseFromSearchDialog()));
+        executors.put("search", () -> ArosUtker.brain.setDialog(new SearchDialog()));
+        executors.put("internet-module", () -> ArosUtker.brain.setDialog(new EnableInternetModuleDialog()));
+        executors.put("status", () -> ArosUtker.brain.setDialog(new YesNoDialog(this::printStatus)));
+    }
 
-        executors.put("do_reload", this::doReload);
+    private void printStatus() {
 
-        executors.put("sound_on", () -> ArosUtker.terminal.sound = true);
-        executors.put("sound_off", () -> ArosUtker.terminal.sound = false);
-
-        executors.put("im_on", () -> ArosUtker.internetModule.setEnabled(true));
-        executors.put("im_off", () -> ArosUtker.internetModule.setEnabled(false));
-
-        for (int i = 1; i <= 4 ; i++) {
-            final int finalI = i;
-            executors.put("speed_" + i, () -> ArosUtker.terminal.setSpeed(finalI));
-        }
     }
 
     private void doReload() {
+        ArosUtker.terminal.say("Произвожу перезагрузку системы...");
         ArosUtker.terminal.say("Перезагрузка команд...");
         try {
             CommandLoader.INSTANCE.load();

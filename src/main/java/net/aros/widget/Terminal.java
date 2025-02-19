@@ -1,7 +1,6 @@
 package net.aros.widget;
 
 import net.aros.ArosUtker;
-import net.aros.brain.CommandProcessingResult;
 import net.aros.widget.util.ProtectedDocumentFilter;
 import net.aros.widget.util.TerminalKeyListener;
 import net.aros.widget.util.TextAreaWithDirtySymbols;
@@ -13,10 +12,8 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
-import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.net.URL;
-import java.util.Optional;
 import java.util.Random;
 
 public class Terminal extends JFrame {
@@ -150,15 +147,9 @@ public class Terminal extends JFrame {
 
     public void processInput() {
         try {
-            String input = doc.getText(promptPosition, doc.getLength() - promptPosition).trim();
-            CommandProcessingResult response = ArosUtker.brain.processCommand(input);
-            if (!response.phrases().isEmpty()) {
-                for (Optional<String> line : response.phrases()) say(line.orElse(null));
-            }
-            ArosUtker.register.find(response.idToDo()).ifPresent(Runnable::run);
-        } catch (BadLocationException ex) {
-            //noinspection CallToPrintStackTrace
-            ex.printStackTrace();
+            ArosUtker.brain.processCommand(doc.getText(promptPosition, doc.getLength() - promptPosition).trim());
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
     }
 
@@ -167,9 +158,8 @@ public class Terminal extends JFrame {
             Clip clip = (Clip) AudioSystem.getLine(new DataLine.Info(Clip.class, stream.getFormat()));
             clip.open(stream);
             clip.start();
-        } catch (Exception e) {
-            //noinspection CallToPrintStackTrace
-            e.printStackTrace();
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
     }
 
