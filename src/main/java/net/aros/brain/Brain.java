@@ -5,10 +5,12 @@ import net.aros.util.SimilarityFinder;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 import static net.aros.util.SimilarityFinder.MatchResult;
 
 public class Brain implements CommandProcessor {
+    public static final Random RANDOM = new Random();
     private final SimilarityFinder finder = new SimilarityFinder();
 
     @Override
@@ -25,18 +27,7 @@ public class Brain implements CommandProcessor {
 
         return new CommandProcessingResult(List.of(
                 result.status().format(result.command().description()),
-                Optional.ofNullable(processCommand(result.command()))
+                Optional.ofNullable(result.command().answers().get(RANDOM.nextInt(result.command().answers().size())))
         ), result.command().id());
-    }
-
-    private String processCommand(Command command) {
-        return switch (command.id()) {
-            case "build" -> "К сожалению, ваша комплектация системного помощника У.Т.К.Э.Р не поддерживает какую-либо постройку или улучшение.";
-            case "info" -> "Пока что информацию о компании У.Т.К.Э.Р ещё не завезли. Ожидайте.";
-            case "reload" -> "Произвожу перезагрузку системы...";
-            case "hello" -> "Здравствуйте, я системный помощник от компании У.Т.К.Э.Р. Что вы хотите сделать?";
-            case "Z" -> "Z.";
-            default -> null;
-        };
     }
 }

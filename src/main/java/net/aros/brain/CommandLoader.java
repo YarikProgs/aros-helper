@@ -13,7 +13,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -41,7 +40,8 @@ public class CommandLoader {
             Command command = new Command(
                     root.get("id").getAsString(),
                     root.get("description").getAsString(),
-                    root.getAsJsonArray("phrases").asList().stream().map(JsonElement::getAsString).toList()
+                    root.getAsJsonArray("phrases").asList().stream().map(JsonElement::getAsString).toList(),
+                    root.getAsJsonArray("answers").asList().stream().map(JsonElement::getAsString).toList()
             );
             commands.add(command);
         } catch (Throwable t) {
@@ -49,7 +49,7 @@ public class CommandLoader {
             t.printStackTrace();
             ArosUtker.terminal.setErrorMode(true);
             ArosUtker.terminal.setWeak(true);
-            ArosUtker.terminal.say("Произошла ошибка во время загрузки команды по пути \"" + path.toString() + "\". Она будет не доступна.");
+            ArosUtker.terminal.say("Произошла ошибка во время загрузки команды по пути \"" + path.toString() + "\". Она будет недоступна.");
         }
     }
 }
