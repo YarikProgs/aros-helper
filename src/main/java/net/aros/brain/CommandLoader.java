@@ -7,7 +7,6 @@ import com.google.gson.JsonObject;
 import net.aros.ArosUtker;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
