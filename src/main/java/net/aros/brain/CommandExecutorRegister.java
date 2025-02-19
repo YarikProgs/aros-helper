@@ -21,6 +21,10 @@ public class CommandExecutorRegister {
         executors.put("search", () -> ArosUtker.brain.setDialog(new SearchDialog()));
         executors.put("internet-module", () -> ArosUtker.brain.setDialog(new EnableInternetModuleDialog()));
         executors.put("status", () -> ArosUtker.brain.setDialog(new YesNoDialog(this::printStatus)));
+        executors.put("evil-mode", () -> ArosUtker.brain.setDialog(new YesNoDialog(() -> {
+            ArosUtker.terminal.switchEvilMode();
+            ArosUtker.terminal.say(ArosUtker.terminal.evilMode ? "Теперь я злой." : "Здравствуйте, чем могу вам помочь?");
+        })));
     }
 
     private void printStatus() {

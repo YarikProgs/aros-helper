@@ -37,16 +37,17 @@ public class Terminal extends JFrame {
 
     public final TextAreaWithDirtySymbols textArea;
     private final Timer typeTimer;
-    public JScrollPane scrollPane;
+    private final StringBuilder toBePrinted = new StringBuilder();
     private Color color = DEFAULT_COLOR;
     private static Image currentDuck;
     private final AbstractDocument doc;
     private int promptPosition;
     private boolean error;
     private boolean duckMouthOpen;
-
-    private final StringBuilder toBePrinted = new StringBuilder();
     private boolean shouldClearErrorOnMessageEnd;
+    public boolean evilMode;
+
+    public JScrollPane scrollPane;
     public boolean sound = true;
 
     public Terminal() {
@@ -87,7 +88,6 @@ public class Terminal extends JFrame {
         textArea.setCaret(new UnderlineCaret(color, doc, textArea, BLINK_RATE)); // Устанавливаем кастомный курсор
 
         textArea.addKeyListener(new TerminalKeyListener(this));
-        //printPrompt();
 
         typeTimer = new Timer(0, e -> {
             if (!toBePrinted.isEmpty()) {
@@ -124,7 +124,7 @@ public class Terminal extends JFrame {
     }
 
     public Image chooseDuck() {
-        return (error ? DUCK_ERROR : DUCK_COMMON)[duckMouthOpen ? 1 : 0];
+        return (error || evilMode ? DUCK_ERROR : DUCK_COMMON)[duckMouthOpen ? 1 : 0];
     }
 
     public void say(String text, boolean additionalLines) {
@@ -167,15 +167,24 @@ public class Terminal extends JFrame {
         return SYMBOLS.charAt(RANDOM.nextInt(0, SYMBOLS.length() - 1));
     }
 
-    public void setErrorMode(boolean errorMode) {
-        error = errorMode;
-        color = errorMode ? ERROR_COLOR : DEFAULT_COLOR;
+    private void updateColors() {
+        color = error || evilMode ? ERROR_COLOR : DEFAULT_COLOR;
 
         textArea.setForeground(color);
         ((UnderlineCaret) textArea.getCaret()).color = color;
 
         duckMouthOpen = false;
         setIconImage(currentDuck = chooseDuck());
+    }
+
+    public void setErrorMode(boolean errorMode) {
+        error = errorMode;
+        updateColors();
+    }
+
+    public void switchEvilMode() {
+        this.evilMode = !this.evilMode;
+        updateColors();
     }
 
     public void setShouldClearErrorOnMessageEnd(boolean shouldClearErrorOnMessageEnd) {
