@@ -1,6 +1,5 @@
 package net.aros.dialog;
 
-import net.aros.brain.CommandProcessingResult;
 import net.aros.util.CommandProcessor;
 
 import java.util.ArrayList;

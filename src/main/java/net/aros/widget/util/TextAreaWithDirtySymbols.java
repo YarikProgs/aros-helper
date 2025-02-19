@@ -1,6 +1,5 @@
 package net.aros.widget.util;
 
-import net.aros.ArosUtker;
 import net.aros.widget.Terminal;
 
 import javax.swing.*;

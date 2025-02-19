@@ -1,7 +1,6 @@
 package net.aros.dialog.custom;
 
 import net.aros.ArosUtker;
-import net.aros.brain.CommandProcessingResult;
 import net.aros.util.CommandProcessor;
 
 public class SoundDialog implements CommandProcessor {
