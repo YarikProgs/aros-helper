@@ -2,7 +2,6 @@ package net.aros.widget;
 
 import net.aros.ArosUtker;
 import net.aros.brain.CommandProcessingResult;
-import net.aros.util.CommandProcessor;
 import net.aros.widget.util.ProtectedDocumentFilter;
 import net.aros.widget.util.TerminalKeyListener;
 import net.aros.widget.util.TextAreaWithDirtySymbols;
@@ -27,6 +26,7 @@ public class Terminal extends JFrame {
     public static final String IN_PREFIX = ">";
     public static final URL TYPE_SOUND = ArosUtker.class.getResource("/sounds/type.wav");
     public static final int BLINK_RATE = 600;
+    public static final int DEFAULT_SPEED = 2;
     public static final Color DEFAULT_COLOR = new Color(0x42C376);
     public static final Color ERROR_COLOR = new Color(0xFF4949);
     public static final Image[] DUCK_COMMON = {
@@ -39,20 +39,20 @@ public class Terminal extends JFrame {
     };
 
     public final TextAreaWithDirtySymbols textArea;
+    private final Timer typeTimer;
     public JScrollPane scrollPane;
     private Color color = DEFAULT_COLOR;
     private static Image currentDuck;
     private final AbstractDocument doc;
-    private final CommandProcessor processor;
     private int promptPosition;
     private boolean error;
     private boolean duckMouthOpen;
 
     private final StringBuilder toBePrinted = new StringBuilder();
-    private boolean weakError;
+    private boolean shouldClearErrorOnMessageEnd;
+    public boolean sound = true;
 
-    public Terminal(CommandProcessor processor) {
-        this.processor = processor;
+    public Terminal() {
         setTitle("Системный помощник У.Т.К.Э.Р");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);
@@ -73,7 +73,10 @@ public class Terminal extends JFrame {
 
         scrollPane = new JScrollPane(textArea);
 
-        scrollPane.getVerticalScrollBar().addAdjustmentListener(e -> textArea.baseY = e.getValue());
+        scrollPane.getVerticalScrollBar().addAdjustmentListener(e -> {
+            textArea.baseY = e.getValue();
+            textArea.repaint();
+        });
 
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         scrollPane.getViewport().setBackground(Color.BLACK);
@@ -86,18 +89,17 @@ public class Terminal extends JFrame {
 
         textArea.setCaret(new UnderlineCaret(color, doc, textArea, BLINK_RATE)); // Устанавливаем кастомный курсор
 
-        textArea.addKeyListener(new TerminalKeyListener(this::processInput));
+        textArea.addKeyListener(new TerminalKeyListener(this));
         //printPrompt();
 
-        new Timer(40, e -> {
+        typeTimer = new Timer(0, e -> {
             if (!toBePrinted.isEmpty()) {
                 textArea.setEditable(false);
                 String val = String.valueOf(toBePrinted.charAt(0));
                 textArea.appendOrReplace(val);
                 textArea.setCaretPosition(doc.getLength());
                 toBePrinted.deleteCharAt(0);
-                if (!val.isBlank() && !val.equals("\n")) playSound(TYPE_SOUND);
-
+                if (sound && !val.isBlank() && !val.equals("\n")) playSound(TYPE_SOUND);
                 if (toBePrinted.isEmpty())
                     printPrompt();
                 else {
@@ -111,9 +113,17 @@ public class Terminal extends JFrame {
                 textArea.setEditable(true);
                 duckMouthOpen = false;
                 currentDuck = chooseDuck();
-                if (weakError) setErrorMode(false);
+                if (shouldClearErrorOnMessageEnd) setErrorMode(false);
             }
-        }).start();
+        });
+        setSpeed(DEFAULT_SPEED);
+        typeTimer.start();
+    }
+
+    public void setSpeed(int speed) {
+        typeTimer.setDelay(
+                80 - 20 * speed
+        );
     }
 
     public Image chooseDuck() {
@@ -133,10 +143,10 @@ public class Terminal extends JFrame {
         });
     }
 
-    private void processInput() {
+    public void processInput() {
         try {
             String input = doc.getText(promptPosition, doc.getLength() - promptPosition).trim();
-            CommandProcessingResult response = processor.processCommand(input);
+            CommandProcessingResult response = ArosUtker.brain.processCommand(input);
             if (!response.phrases().isEmpty()) {
                 toBePrinted.append("\n\n");
                 for (Optional<String> line : response.phrases()) say(line.orElse(null));
@@ -174,7 +184,7 @@ public class Terminal extends JFrame {
         setIconImage(currentDuck = chooseDuck());
     }
 
-    public void setWeak(boolean weakError) {
-        this.weakError = weakError;
+    public void setShouldClearErrorOnMessageEnd(boolean shouldClearErrorOnMessageEnd) {
+        this.shouldClearErrorOnMessageEnd = shouldClearErrorOnMessageEnd;
     }
 }

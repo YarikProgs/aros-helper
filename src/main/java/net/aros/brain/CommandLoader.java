@@ -31,6 +31,11 @@ public class CommandLoader {
         try (Stream<Path> paths = Files.walk(Paths.get(Objects.requireNonNull(ArosUtker.class.getResource("/commands")).toURI()))) {
             paths.filter(Files::isRegularFile).filter(p -> p.toString().endsWith(".json")).forEach(this::load);
         }
+
+        if (commands.isEmpty()) {
+            ArosUtker.terminal.setErrorMode(true);
+            ArosUtker.terminal.say("Никакие команды не были загружены. Общение будет недоступно.");
+        }
     }
 
     private void load(Path path) {
@@ -48,7 +53,7 @@ public class CommandLoader {
             //noinspection CallToPrintStackTrace
             t.printStackTrace();
             ArosUtker.terminal.setErrorMode(true);
-            ArosUtker.terminal.setWeak(true);
+            ArosUtker.terminal.setShouldClearErrorOnMessageEnd(true);
             ArosUtker.terminal.say("Произошла ошибка во время загрузки команды по пути \"" + path.toString() + "\". Она будет недоступна.");
         }
     }

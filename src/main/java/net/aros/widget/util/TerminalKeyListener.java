@@ -1,13 +1,15 @@
 package net.aros.widget.util;
 
+import net.aros.widget.Terminal;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class TerminalKeyListener extends KeyAdapter {
-    private final Runnable inputProcessor;
+    private final Terminal parent;
 
-    public TerminalKeyListener(Runnable inputProcessor) {
-        this.inputProcessor = inputProcessor;
+    public TerminalKeyListener(Terminal parent) {
+        this.parent = parent;
     }
 
     @Override
@@ -18,7 +20,7 @@ public class TerminalKeyListener extends KeyAdapter {
         }
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             e.consume();
-            inputProcessor.run();
+            if (parent.textArea.isEditable()) parent.processInput();
         }
     }
 }

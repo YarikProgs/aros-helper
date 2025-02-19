@@ -13,19 +13,21 @@ public class ArosUtker {
     public static CommandExecutorRegister register = new CommandExecutorRegister();
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            terminal = new Terminal(ArosUtker.brain);
-            terminal.setVisible(true);
+        SwingUtilities.invokeLater(ArosUtker::load);
+    }
 
-            try {
-                terminal.say("Загрузка команд...");
-                CommandLoader.INSTANCE.load();
-                register.init();
-                terminal.say("Успешно.");
-            } catch (Throwable t) {
-                terminal.setErrorMode(true);
-                terminal.say("Произошла ошибка во время загрузке команд. Общение будет недоступно.");
-            }
-        });
+    private static void load() {
+        terminal = new Terminal();
+        terminal.setVisible(true);
+
+        try {
+            terminal.say("Загрузка команд...");
+            CommandLoader.INSTANCE.load();
+            register.init();
+            terminal.say("Успешно.");
+        } catch (Throwable t) {
+            terminal.setErrorMode(true);
+            terminal.say("Произошла ошибка во время загрузке команд, мозга. Общение будет недоступно.");
+        }
     }
 }
