@@ -23,10 +23,9 @@ public class ArosUtker {
         terminal.setVisible(true);
 
         try {
-            terminal.say("Загрузка команд...");
+            terminal.say("Загрузка команд...", false);
             CommandLoader.INSTANCE.load();
             register.init();
-            terminal.say("Успешно.");
         } catch (Throwable t) {
             terminal.setErrorMode(true);
             terminal.say("Произошла ошибка во время загрузки команд. Общение будет недоступно.");

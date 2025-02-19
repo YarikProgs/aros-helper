@@ -130,19 +130,19 @@ public class Terminal extends JFrame {
         return (error ? DUCK_ERROR : DUCK_COMMON)[duckMouthOpen ? 1 : 0];
     }
 
-    public void say(String text, boolean fromCommand) {
+    public void say(String text, boolean additionalLines) {
         if (text == null) return;
-        if (fromCommand) toBePrinted.append("\n\n");
-        toBePrinted.append(OUT_PREFIX).append(" ").append(text).append("\n\n");
+        if (additionalLines) toBePrinted.append("\n\n");
+        toBePrinted.append(OUT_PREFIX).append(" ").append(text);
     }
 
     public void say(String text) {
-        say(text, false);
+        say(text, true);
     }
 
     public void printPrompt() {
         SwingUtilities.invokeLater(() -> {
-            textArea.append(IN_PREFIX + " ");
+            textArea.append("\n\n" + IN_PREFIX + " ");
             promptPosition = textArea.getDocument().getLength();
             textArea.setCaretPosition(promptPosition);
         });
@@ -153,7 +153,6 @@ public class Terminal extends JFrame {
             String input = doc.getText(promptPosition, doc.getLength() - promptPosition).trim();
             CommandProcessingResult response = ArosUtker.brain.processCommand(input);
             if (!response.phrases().isEmpty()) {
-                toBePrinted.append("\n\n");
                 for (Optional<String> line : response.phrases()) say(line.orElse(null));
             }
             ArosUtker.register.find(response.idToDo()).ifPresent(Runnable::run);

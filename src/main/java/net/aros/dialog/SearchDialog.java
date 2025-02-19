@@ -15,7 +15,7 @@ public class SearchDialog implements CommandProcessor {
 
         Map<String, String> res;
         try {
-            ArosUtker.terminal.say("Попытка поиска...", true);
+            ArosUtker.terminal.say("Попытка поиска...");
             res = ArosUtker.internetModule.search(command);
         } catch (Throwable e) {
             e.printStackTrace();

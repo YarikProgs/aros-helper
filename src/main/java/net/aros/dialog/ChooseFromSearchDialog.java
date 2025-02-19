@@ -6,7 +6,6 @@ import net.aros.util.CommandProcessor;
 
 import java.awt.*;
 import java.net.URI;
-import java.util.List;
 
 public class ChooseFromSearchDialog implements CommandProcessor {
     @Override
@@ -27,7 +26,7 @@ public class ChooseFromSearchDialog implements CommandProcessor {
         }
 
         try {
-            ArosUtker.terminal.say("Попытка адресации...", true);
+            ArosUtker.terminal.say("Попытка адресации...");
             Desktop.getDesktop().browse(URI.create(SearchDialog.lastSearch.get(val)));
         } catch (Throwable t) {
             ArosUtker.terminal.setErrorMode(true);
@@ -35,8 +34,6 @@ public class ChooseFromSearchDialog implements CommandProcessor {
             ArosUtker.terminal.setShouldClearErrorOnMessageEnd(true);
         }
 
-        return CommandProcessingResult.singlePhrase(
-                "Успешно.", null, true
-        );
+        return CommandProcessingResult.singlePhrase("Успешно.", null, true);
     }
 }
