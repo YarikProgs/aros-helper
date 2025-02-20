@@ -29,6 +29,11 @@ public class MultiphaseDialog implements CommandProcessor {
         currentPhase++;
     }
 
+    protected final void prevPhase() {
+        if (currentPhase <= 0) return;
+        currentPhase--;
+    }
+
     protected final void end() {
         if (hasEnded()) return;
         currentPhase = phases.size();
