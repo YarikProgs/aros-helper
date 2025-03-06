@@ -39,7 +39,9 @@ public class PrudServer {
                 Queue<String> messages = client.getMessages();
                 if (!messages.isEmpty()) {
                     PrudServer.terminal.say("Отсылаю всем новое сообщение.");
-                    clients.parallelStream().forEach(cl -> cl.send(messages));
+                    clients.parallelStream().forEach(cl -> {
+                        if (cl != client) cl.send(messages);
+                    });
                     client.getMessages().clear();
                 }
             }
