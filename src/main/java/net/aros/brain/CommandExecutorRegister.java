@@ -2,10 +2,7 @@ package net.aros.brain;
 
 import net.aros.ArosUtker;
 import net.aros.dialog.YesNoDialog;
-import net.aros.dialog.custom.EnableInternetModuleDialog;
-import net.aros.dialog.custom.SearchDialog;
-import net.aros.dialog.custom.SoundDialog;
-import net.aros.dialog.custom.SpeedDialog;
+import net.aros.dialog.custom.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +22,7 @@ public class CommandExecutorRegister {
             ArosUtker.terminal.switchEvilMode();
             ArosUtker.terminal.say(ArosUtker.terminal.evilMode ? "Теперь я злой." : "Здравствуйте, чем могу вам помочь?");
         })));
+        executors.put("prud", () -> ArosUtker.brain.setDialog(new PrudDialog()));
     }
 
     private void printStatus() {

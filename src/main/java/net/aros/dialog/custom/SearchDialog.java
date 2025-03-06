@@ -31,7 +31,7 @@ public class SearchDialog extends MultiphaseDialog {
         addPhase(this::chooseFromSearch);
     }
 
-    private String getModuleStatus() {
+    public static String getModuleStatus() {
         if (!ArosUtker.internetModule.isInit()) return "Модуль не инициализирован.";
         if (!ArosUtker.internetModule.isEnabled()) return "Модуль выключен.";
         return null;
